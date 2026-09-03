@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pdf/pdf.dart';
 import 'package:printing/printing.dart';
 import 'package:provider/provider.dart';
 
@@ -21,6 +22,7 @@ class PreviewScreen extends StatelessWidget {
       body: PdfPreview(
         build: (_) => buildDocumentPdf(doc, settings),
         canDebug: false,
+        initialPageFormat: PdfPageFormat.a4,
         pdfFileName:
             '${doc.title.replaceAll(RegExp(r'[^A-Za-z0-9]+'), '_')}.pdf',
       ),
