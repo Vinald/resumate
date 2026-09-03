@@ -1,0 +1,53 @@
+\documentclass[a4paper,11pt]{letter}
+\usepackage[utf8]{inputenc}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{geometry}
+\usepackage{setspace}
+\usepackage{ragged2e}
+\usepackage{fontawesome5}
+\usepackage{xcolor}
+\usepackage{array}
+\usepackage{tcolorbox}
+\usepackage{pifont}
+\usepackage{graphicx}
+\geometry{margin=0.7in}
+\setstretch{1.25}
+
+\definecolor{blue}{RGB}{<<ACCENT_RGB>>}
+
+\begin{document}
+\pagenumbering{gobble}
+
+\begin{center}
+    \textbf{\Large{<<NAME>>}} \\
+    \textbf{\MakeUppercase{<<TITLE>>}} \\
+    \faGlobe \hspace{2pt} \href{<<PORTFOLIO_URL>>}{Portfolio} \hspace{3pt}
+    \faPhone \hspace{2pt} <<PHONE>> \hspace{3pt}
+    \faEnvelope \hspace{2pt} \href{mailto:<<EMAIL>>}{<<EMAIL>>} \hspace{3pt}
+    \faGithub \hspace{2pt} \href{<<GITHUB_URL>>}{<<GITHUB_LABEL>>} \hspace{3pt}
+    \faLinkedin \hspace{2pt} \href{<<LINKEDIN_URL>>}{<<LINKEDIN_LABEL>>}
+
+    \vspace{0.3cm} \hrule
+\end{center}
+
+\vspace{0.3cm}
+
+<<DATE>>
+
+\vspace{0.1cm}
+<<RECIPIENT_DEPT>> \\
+<<COMPANY_NAME>> \\
+<<COMPANY_ADDRESS>>
+
+\vspace{0.3cm}
+
+<<SALUTATION>>
+
+<<BODY>>
+
+<<CLOSING>>
+
+<<SIGNATURE_NAME>>
+
+\end{document}

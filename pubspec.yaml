@@ -1,0 +1,65 @@
+name: resume_generator
+description: "Generate resumes, cover letters and application letters on your phone, export to PDF, DOCX, text and LaTeX, and combine PDFs."
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.10.4
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  cupertino_icons: ^1.0.8
+
+  # State
+  provider: ^6.1.2
+
+  # PDF generation + preview + print/share
+  pdf: ^3.11.1
+  printing: ^5.13.3
+
+  # PDF merge (native Android + iOS)
+  pdf_combiner: ^3.1.0
+
+  # Files, sharing, storage
+  file_picker: ^8.1.4
+  share_plus: ^10.1.2
+  path_provider: ^2.1.5
+
+  # DOCX (zip of XML)
+  archive: ^3.6.1
+
+  # Signature image + accent colour
+  image_picker: ^1.1.2
+  flutter_colorpicker: ^1.1.0
+
+  # Misc
+  uuid: ^4.5.1
+  intl: ^0.19.0
+  collection: ^1.19.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/templates/
+  fonts:
+    - family: EBGaramond
+      fonts:
+        - asset: assets/fonts/EBGaramond-Regular.ttf
+        - asset: assets/fonts/EBGaramond-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/EBGaramond-Italic.ttf
+          style: italic
+        - asset: assets/fonts/EBGaramond-BoldItalic.ttf
+          weight: 700
+          style: italic
+    - family: FontAwesome
+      fonts:
+        - asset: assets/fonts/FontAwesome-Solid.ttf
+        - asset: assets/fonts/FontAwesome-Brands.ttf
