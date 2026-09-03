@@ -14,14 +14,23 @@ class SettingsStore extends ChangeNotifier {
   bool get loading => _loading;
 
   Future<void> load() async {
-    _settings = await _repo.load();
+    try {
+      _settings = await _repo.load();
+    } catch (e) {
+      debugPrint('SettingsStore: using defaults ($e)');
+      _settings = AppSettings();
+    }
     _loading = false;
     notifyListeners();
   }
 
   Future<void> update(AppSettings settings) async {
     _settings = settings;
-    await _repo.save(settings);
+    try {
+      await _repo.save(settings);
+    } catch (e) {
+      debugPrint('SettingsStore: save skipped ($e)');
+    }
     notifyListeners();
   }
 }

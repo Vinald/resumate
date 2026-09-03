@@ -130,13 +130,13 @@ packages:
     source: hosted
     version: "7.0.1"
   file_magic_number:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
       name: file_magic_number
-      sha256: cd0ec23eb2511206152baa87edb90b4862dc1690b1fbe5ebcf06654d3ee3112b
+      sha256: "5a6ae4bea934b7bde961bb06947743fdb84ca46e60ebc3ca574b848cf24382fd"
       url: "https://pub.dev"
     source: hosted
-    version: "1.4.2"
+    version: "1.2.0"
   file_picker:
     dependency: "direct main"
     description:

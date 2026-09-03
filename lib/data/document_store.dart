@@ -27,14 +27,22 @@ class DocumentStore extends ChangeNotifier {
     _loading = true;
     notifyListeners();
 
-    if (await _repo.isEmpty()) {
-      for (final doc in SeedData.initialDocuments()) {
-        await _repo.save(doc);
+    try {
+      if (await _repo.isEmpty()) {
+        for (final doc in SeedData.initialDocuments()) {
+          await _repo.save(doc);
+        }
       }
+      _documents
+        ..clear()
+        ..addAll(await _repo.loadAll());
+    } catch (e) {
+      // Storage unavailable (e.g. web preview) — run from in-memory seed data.
+      debugPrint('DocumentStore: falling back to in-memory data ($e)');
+      _documents
+        ..clear()
+        ..addAll(SeedData.initialDocuments());
     }
-    _documents
-      ..clear()
-      ..addAll(await _repo.loadAll());
     _loading = false;
     notifyListeners();
   }
@@ -48,7 +56,11 @@ class DocumentStore extends ChangeNotifier {
 
   Future<void> save(GeneratedDocument doc) async {
     doc.touch();
-    await _repo.save(doc);
+    try {
+      await _repo.save(doc);
+    } catch (e) {
+      debugPrint('DocumentStore: save skipped ($e)');
+    }
     final index = _documents.indexWhere((d) => d.id == doc.id);
     if (index == -1) {
       _documents.insert(0, doc);
@@ -60,7 +72,11 @@ class DocumentStore extends ChangeNotifier {
   }
 
   Future<void> delete(String id) async {
-    await _repo.delete(id);
+    try {
+      await _repo.delete(id);
+    } catch (e) {
+      debugPrint('DocumentStore: delete skipped ($e)');
+    }
     _documents.removeWhere((d) => d.id == id);
     notifyListeners();
   }
