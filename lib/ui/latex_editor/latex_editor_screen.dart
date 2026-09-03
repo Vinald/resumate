@@ -40,11 +40,17 @@ class _LatexEditorScreenState extends State<LatexEditorScreen> {
   }
 
   Future<void> _shareTex() async {
+    final sigPath = context.read<SettingsStore>().settings.signatureImagePath;
     final dir = await getTemporaryDirectory();
     final safe = _doc.title.replaceAll(RegExp(r'[^A-Za-z0-9]+'), '_');
     final file = File('${dir.path}/$safe.tex');
     await file.writeAsString(_controller.text);
-    await Share.shareXFiles([XFile(file.path)], subject: '${_doc.title}.tex');
+
+    final files = [XFile(file.path)];
+    if (_doc.type.isLetter && sigPath != null && File(sigPath).existsSync()) {
+      files.add(XFile(sigPath, name: 'signature.png'));
+    }
+    await Share.shareXFiles(files, subject: '${_doc.title}.tex');
   }
 
   void _showTokens() {

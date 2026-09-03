@@ -44,5 +44,9 @@ const letterTokens = <TokenDoc>[
   TokenDoc('<<SALUTATION>>', 'Greeting line'),
   TokenDoc('<<BODY>>', 'Body paragraphs (placeholders resolved)'),
   TokenDoc('<<CLOSING>>', 'Closing line, e.g. Sincerely,'),
+  TokenDoc(
+    '<<SIGNATURE_IMAGE>>',
+    r'\includegraphics for signature.png when a signature is set, else empty',
+  ),
   TokenDoc('<<SIGNATURE_NAME>>', 'Typed name under the signature'),
 ];

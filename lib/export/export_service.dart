@@ -49,13 +49,26 @@ class ExportService {
     return file;
   }
 
-  /// Writes [doc] in [format] and opens the system share sheet.
+  /// Writes [doc] in [format] and opens the system share sheet. For `.tex` with
+  /// a configured signature, `signature.png` is attached alongside so it can be
+  /// dropped straight into Overleaf.
   static Future<void> share(
     GeneratedDocument doc,
     AppSettings settings,
     ExportFormat format,
   ) async {
     final file = await writeToFile(doc, settings, format);
-    await Share.shareXFiles([XFile(file.path)], subject: doc.title);
+    final files = [XFile(file.path)];
+
+    if (format == ExportFormat.tex &&
+        doc.type.isLetter &&
+        settings.signatureImagePath != null) {
+      final sig = File(settings.signatureImagePath!);
+      if (await sig.exists()) {
+        files.add(XFile(sig.path, name: 'signature.png'));
+      }
+    }
+
+    await Share.shareXFiles(files, subject: doc.title);
   }
 }

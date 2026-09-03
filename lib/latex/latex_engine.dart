@@ -93,6 +93,12 @@ class LatexEngine {
       'SALUTATION': latexEscape(l.salutation),
       'BODY': body,
       'CLOSING': latexEscape(l.closing),
+      'SIGNATURE_IMAGE':
+          (settings.signatureImagePath != null &&
+                  settings.signatureImagePath!.isNotEmpty)
+              ? '% Upload your signature as signature.png alongside this file.\n'
+                  r'\includegraphics[width=0.12\textwidth]{signature.png}'
+              : '',
       'SIGNATURE_NAME': latexEscape(
         l.signatureName.isEmpty ? k.name : l.signatureName,
       ),

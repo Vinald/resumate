@@ -1,15 +1,12 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 
 import '../../data/settings_store.dart';
 import '../../models/app_settings.dart';
-import '../widgets/editor_widgets.dart';
 import '../resume_editor/contact_section.dart';
+import '../widgets/editor_widgets.dart';
+import '../widgets/signature_picker.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -104,46 +101,9 @@ class SettingsScreen extends StatelessWidget {
               ),
             ],
           ),
-          SectionCard(
+          const SectionCard(
             title: 'Signature',
-            children: [
-              if (s.signatureImagePath != null &&
-                  File(s.signatureImagePath!).existsSync())
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 8),
-                  child: Image.file(
-                    File(s.signatureImagePath!),
-                    height: 60,
-                    alignment: Alignment.centerLeft,
-                  ),
-                ),
-              Row(
-                children: [
-                  OutlinedButton.icon(
-                    onPressed: () async {
-                      final picker = ImagePicker();
-                      final file = await picker.pickImage(
-                        source: ImageSource.gallery,
-                      );
-                      if (file == null) return;
-                      final dir = await getApplicationDocumentsDirectory();
-                      final saved = await File(
-                        file.path,
-                      ).copy('${dir.path}/signature.png');
-                      update(s.copyWith(signatureImagePath: saved.path));
-                    },
-                    icon: const Icon(Icons.image),
-                    label: const Text('Choose image'),
-                  ),
-                  const SizedBox(width: 8),
-                  if (s.signatureImagePath != null)
-                    TextButton(
-                      onPressed: () => update(s.copyWith(clearSignature: true)),
-                      child: const Text('Remove'),
-                    ),
-                ],
-              ),
-            ],
+            children: [SignaturePicker(dense: true)],
           ),
           const SizedBox(height: 32),
         ],

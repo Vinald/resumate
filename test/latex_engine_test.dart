@@ -46,6 +46,23 @@ void main() {
     expect(tex, contains('Acme Ltd'));
   });
 
+  test('signature image token emits includegraphics only when configured',
+      () async {
+    final doc = SeedData.initialDocuments().firstWhere(
+      (d) => d.type == DocumentType.applicationLetter,
+    );
+
+    final without = await engine.render(doc, AppSettings());
+    expect(without, isNot(contains(r'\includegraphics')));
+
+    final withSig = await engine.render(
+      doc,
+      AppSettings(signatureImagePath: '/some/where/signature.png'),
+    );
+    expect(withSig, contains(r'\includegraphics[width=0.12\textwidth]{signature.png}'));
+    expect(withSig, isNot(contains('<<')));
+  });
+
   test('accent colour from settings flows into the RGB token', () async {
     final doc = SeedData.initialDocuments().first;
     final tex = await engine.render(

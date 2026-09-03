@@ -9,6 +9,7 @@ import '../latex_editor/latex_editor_screen.dart';
 import '../preview/preview_screen.dart';
 import '../resume_editor/contact_section.dart';
 import '../widgets/editor_widgets.dart';
+import '../widgets/signature_picker.dart';
 
 class LetterEditorScreen extends StatefulWidget {
   const LetterEditorScreen({super.key, required this.documentId});
@@ -187,12 +188,8 @@ class _LetterEditorScreenState extends State<LetterEditorScreen> {
                   value: _data.signatureName,
                   onChanged: (v) => _edit(() => _data.signatureName = v),
                 ),
-                const SizedBox(height: 4),
-                const Text(
-                  'The signature image is set in Settings and appears on the '
-                  'PDF and .tex output.',
-                  style: TextStyle(fontSize: 12),
-                ),
+                const SizedBox(height: 8),
+                const SignaturePicker(),
               ],
             ),
             const SizedBox(height: 96),
