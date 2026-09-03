@@ -25,6 +25,20 @@ First-time toolchain setup:
 - iOS: `sudo gem install cocoapods` (or `brew install cocoapods`), then `cd ios && pod install`
 - Web (handy for quick previews on desktop): `flutter run -d chrome`
 
+### Building an APK
+
+Gradle needs a JDK &le; 21 (JDK 25/26 on PATH will fail the build):
+
+```sh
+export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk-21.jdk/Contents/Home
+flutter build apk --release --split-per-abi
+```
+
+Output: `build/app/outputs/flutter-apk/app-arm64-v8a-release.apk` (~32 MB) for
+modern phones. It is signed with the debug key — fine for sideloading, replace
+with a real signing config before publishing. The release build strips unused
+`com.tom_roush.pdfbox` / JPEG-2000 classes via `android/app/proguard-rules.pro`.
+
 ## Project layout
 
 | Path | Purpose |
