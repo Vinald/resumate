@@ -45,3 +45,16 @@ First-time toolchain setup:
 flutter analyze
 flutter test
 ```
+
+Covered: model serialization, local repository CRUD, seed-data round-trips, the
+LaTeX token engine, DOCX zip structure, plain-text / Markdown output, and native
+PDF rendering.
+
+## Notes
+
+- **Storage** is local per device (`path_provider`). If storage is unavailable
+  (e.g. running on web for a quick look), the app runs from in-memory seed data.
+- **Web PDF preview** relies on `printing`'s pdf.js integration; the in-app
+  preview is intended for Android / iOS, where it uses the native renderer.
+- The `.tex` export path fills the real templates in `assets/templates/` and is
+  the way to get pixel-exact Overleaf output.
