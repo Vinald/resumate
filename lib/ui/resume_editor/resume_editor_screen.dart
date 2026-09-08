@@ -167,6 +167,7 @@ class _ExperienceSection extends StatelessWidget {
       children: [
         for (var i = 0; i < data.experience.length; i++)
           _EntryFrame(
+            key: ObjectKey(data.experience[i]),
             index: i,
             count: data.experience.length,
             onMoveUp: () => edit(
@@ -242,6 +243,7 @@ class _SkillsSection extends StatelessWidget {
       children: [
         for (var i = 0; i < data.skills.length; i++)
           _EntryFrame(
+            key: ObjectKey(data.skills[i]),
             index: i,
             count: data.skills.length,
             onMoveUp:
@@ -292,6 +294,7 @@ class _EducationSection extends StatelessWidget {
       children: [
         for (var i = 0; i < data.education.length; i++)
           _EntryFrame(
+            key: ObjectKey(data.education[i]),
             index: i,
             count: data.education.length,
             onMoveUp: () => edit(
@@ -345,6 +348,7 @@ class _ProjectsSection extends StatelessWidget {
       children: [
         for (var i = 0; i < data.projects.length; i++)
           _EntryFrame(
+            key: ObjectKey(data.projects[i]),
             index: i,
             count: data.projects.length,
             onMoveUp: () => edit(
@@ -408,6 +412,7 @@ class _ReferencesSection extends StatelessWidget {
         else ...[
           for (var i = 0; i < data.references.length; i++)
             _EntryFrame(
+              key: ObjectKey(data.references[i]),
               index: i,
               count: data.references.length,
               onMoveUp: () => edit(
@@ -470,6 +475,7 @@ class _ReferencesSection extends StatelessWidget {
 
 class _EntryFrame extends StatelessWidget {
   const _EntryFrame({
+    super.key,
     required this.index,
     required this.count,
     required this.child,
