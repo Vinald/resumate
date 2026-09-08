@@ -24,7 +24,7 @@ void main() {
       ],
       softSkills: ['Teamwork'],
       education: [
-        EducationEntry(qualification: 'BSc', institution: 'Makerere'),
+        EducationEntry(qualification: 'BSc', institution: 'Example University'),
       ],
       projects: [ProjectEntry(name: 'P', tech: 'T', description: 'D')],
       references: [ReferenceEntry(name: 'Ref', email: 'r@x.com')],
@@ -37,7 +37,7 @@ void main() {
     expect(restored.summary, 'Hello');
     expect(restored.experience.single.bullets, ['Did a thing', 'Did another']);
     expect(restored.skills.single.items, ['Dart', 'Kotlin']);
-    expect(restored.education.single.institution, 'Makerere');
+    expect(restored.education.single.institution, 'Example University');
     expect(restored.projects.single.name, 'P');
     expect(restored.references.single.email, 'r@x.com');
   });

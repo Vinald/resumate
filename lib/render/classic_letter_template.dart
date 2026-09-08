@@ -9,7 +9,7 @@ import 'letter_template.dart';
 import 'pdf_components.dart';
 import 'pdf_theme.dart';
 
-/// Default letter template (cover + application), matching Vinald's LaTeX:
+/// Default letter template (cover + application), matching the LaTeX source:
 /// centred name/title header, accent rule, dated block, justified body,
 /// signature image + typed name.
 class ClassicLetterTemplate implements LetterTemplate {

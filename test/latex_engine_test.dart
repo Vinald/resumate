@@ -24,12 +24,12 @@ void main() {
     final tex = await engine.render(doc, settings);
 
     expect(tex, isNot(contains('<<')));
-    expect(tex, contains('OKIROR SAMUEL VINALD'));
+    expect(tex, contains('Alex Doe'));
     expect(tex, contains(r'\definecolor{blue}{RGB}{0, 0, 255}'));
     expect(tex, contains(r'\begin{document}'));
     expect(tex, contains(r'\end{document}'));
     expect(tex, contains(r'\item')); // experience bullets
-    expect(tex, contains('Infectious Diseases Institute'));
+    expect(tex, contains('Acme Corp'));
   });
 
   test('letter render resolves placeholders and fills tokens', () async {

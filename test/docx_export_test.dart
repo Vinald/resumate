@@ -29,7 +29,7 @@ void main() {
       archive.findFile('word/document.xml')!.content as List<int>,
     );
     expect(documentXml, contains('<w:document'));
-    expect(documentXml, contains('OKIROR SAMUEL VINALD'));
+    expect(documentXml, contains('Alex Doe'));
     expect(documentXml, contains('Employment History'.toUpperCase()));
   });
 

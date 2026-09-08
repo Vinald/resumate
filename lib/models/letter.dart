@@ -24,7 +24,7 @@ class LetterData {
     this.date = '',
     this.recipientDept = 'Human Resources Department',
     this.companyName = '{{company}}',
-    this.companyAddress = 'Kampala, Uganda',
+    this.companyAddress = 'City, Country',
     this.salutation = 'Dear Hiring Manager,',
     List<String>? body,
     this.closing = 'Sincerely,',
@@ -114,7 +114,7 @@ class LetterData {
     date: json['date'] as String? ?? '',
     recipientDept: json['recipientDept'] as String? ?? 'Human Resources Department',
     companyName: json['companyName'] as String? ?? '{{company}}',
-    companyAddress: json['companyAddress'] as String? ?? 'Kampala, Uganda',
+    companyAddress: json['companyAddress'] as String? ?? 'City, Country',
     salutation: json['salutation'] as String? ?? 'Dear Hiring Manager,',
     body:
         (json['body'] as List<dynamic>? ?? const [])
