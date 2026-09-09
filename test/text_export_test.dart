@@ -10,7 +10,7 @@ void main() {
     );
     final text = TextExport.plain(doc);
     expect(text, contains('EMPLOYMENT HISTORY'));
-    expect(text, contains('- Led production deployment'));
+    expect(text, contains('- Led development of'));
     expect(text, isNot(contains('#')));
   });
 
@@ -20,7 +20,7 @@ void main() {
     );
     final md = TextExport.markdown(doc);
     expect(md, contains('## Employment History'));
-    expect(md, contains('# OKIROR SAMUEL VINALD'));
+    expect(md, contains('# Alex Doe'));
   });
 
   test('letter text resolves placeholders', () {

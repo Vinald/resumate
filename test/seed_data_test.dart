@@ -16,12 +16,12 @@ void main() {
 
   test('seed resume has the expected shape', () {
     final resume = SeedData.resume();
-    expect(resume.contact.name, 'OKIROR SAMUEL VINALD');
+    expect(resume.contact.name, 'Alex Doe');
     expect(resume.experience.length, 5);
     expect(resume.skills.length, 8);
     expect(resume.education.length, 3);
     expect(resume.projects.length, 3);
-    expect(resume.summary, contains('Full-stack Software Engineer'));
+    expect(resume.summary, contains('Full-stack software engineer'));
   });
 
   test('every seed document survives a JSON round-trip', () {

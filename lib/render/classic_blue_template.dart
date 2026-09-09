@@ -6,7 +6,7 @@ import 'pdf_components.dart';
 import 'pdf_theme.dart';
 import 'resume_template.dart';
 
-/// Default resume template, styled after Vinald's Overleaf LaTeX:
+/// Default resume template, styled after the Overleaf LaTeX source:
 /// huge left-aligned name, accent title on the right, accent rules,
 /// centred uppercase headings and `✓` bullets.
 class ClassicBlueTemplate implements ResumeTemplate {
