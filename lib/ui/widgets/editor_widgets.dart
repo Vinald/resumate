@@ -75,7 +75,11 @@ class EditorField extends StatelessWidget {
 }
 
 /// Editor for an ordered list of short strings (bullets, skill items, …).
-class StringListEditor extends StatelessWidget {
+///
+/// Backed by one [TextEditingController] per row so that reordering a row keeps
+/// its text with it (a plain `initialValue` field would show the previous row's
+/// text after a move — see REVIEW.md M1).
+class StringListEditor extends StatefulWidget {
   const StringListEditor({
     super.key,
     required this.label,
@@ -92,6 +96,74 @@ class StringListEditor extends StatelessWidget {
   final bool multiline;
 
   @override
+  State<StringListEditor> createState() => _StringListEditorState();
+}
+
+class _StringListEditorState extends State<StringListEditor> {
+  late List<TextEditingController> _controllers;
+
+  @override
+  void initState() {
+    super.initState();
+    _controllers = widget.values.map(_controller).toList();
+  }
+
+  @override
+  void didUpdateWidget(StringListEditor oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // Structural edits made through this widget keep [_controllers] and
+    // widget.values in lock-step already; only resync when the parent replaced
+    // the list out from under us (load, undo, section reset).
+    if (!_inSync()) {
+      for (final c in _controllers) {
+        c.dispose();
+      }
+      _controllers = widget.values.map(_controller).toList();
+    }
+  }
+
+  TextEditingController _controller(String text) =>
+      TextEditingController(text: text);
+
+  bool _inSync() {
+    if (widget.values.length != _controllers.length) return false;
+    for (var i = 0; i < widget.values.length; i++) {
+      if (_controllers[i].text != widget.values[i]) return false;
+    }
+    return true;
+  }
+
+  void _emit() =>
+      widget.onChanged(_controllers.map((c) => c.text).toList(growable: false));
+
+  void _add() {
+    setState(() => _controllers.add(_controller('')));
+    _emit();
+  }
+
+  void _removeAt(int i) {
+    setState(() => _controllers.removeAt(i).dispose());
+    _emit();
+  }
+
+  void _moveUp(int i) {
+    if (i == 0) return;
+    setState(() {
+      final c = _controllers.removeAt(i);
+      _controllers.insert(i - 1, c);
+    });
+    _emit();
+  }
+
+  @override
+  void dispose() {
+    for (final c in _controllers) {
+      c.dispose();
+    }
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -99,50 +171,35 @@ class StringListEditor extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.only(top: 4, bottom: 4),
           child: Text(
-            label,
+            widget.label,
             style: Theme.of(context).textTheme.labelLarge,
           ),
         ),
-        for (var i = 0; i < values.length; i++)
+        for (var i = 0; i < _controllers.length; i++)
           Padding(
+            key: ObjectKey(_controllers[i]),
             padding: const EdgeInsets.only(bottom: 6),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Expanded(
-                  child: TextFormField(
-                    key: ValueKey('$label-$i-${values.length}'),
-                    initialValue: values[i],
+                  child: TextField(
+                    controller: _controllers[i],
                     minLines: 1,
-                    maxLines: multiline ? 4 : 1,
-                    decoration: InputDecoration(hintText: itemHint),
-                    onChanged: (v) {
-                      final next = [...values];
-                      next[i] = v;
-                      onChanged(next);
-                    },
+                    maxLines: widget.multiline ? 4 : 1,
+                    decoration: InputDecoration(hintText: widget.itemHint),
+                    onChanged: (_) => _emit(),
                   ),
                 ),
                 IconButton(
                   tooltip: 'Move up',
                   icon: const Icon(Icons.arrow_upward, size: 18),
-                  onPressed:
-                      i == 0
-                          ? null
-                          : () {
-                            final next = [...values];
-                            final item = next.removeAt(i);
-                            next.insert(i - 1, item);
-                            onChanged(next);
-                          },
+                  onPressed: i == 0 ? null : () => _moveUp(i),
                 ),
                 IconButton(
                   tooltip: 'Remove',
                   icon: const Icon(Icons.close, size: 18),
-                  onPressed: () {
-                    final next = [...values]..removeAt(i);
-                    onChanged(next);
-                  },
+                  onPressed: () => _removeAt(i),
                 ),
               ],
             ),
@@ -150,9 +207,9 @@ class StringListEditor extends StatelessWidget {
         Align(
           alignment: Alignment.centerLeft,
           child: TextButton.icon(
-            onPressed: () => onChanged([...values, '']),
+            onPressed: _add,
             icon: const Icon(Icons.add, size: 18),
-            label: Text('Add ${itemHint.toLowerCase()}'),
+            label: Text('Add ${widget.itemHint.toLowerCase()}'),
           ),
         ),
       ],

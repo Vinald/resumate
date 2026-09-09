@@ -117,6 +117,7 @@ class _LetterEditorScreenState extends State<LetterEditorScreen> {
                   const SizedBox(height: 8),
                   for (final name in placeholders)
                     EditorField(
+                      key: ValueKey('placeholder-$name'),
                       label: name,
                       value: _data.placeholders[name] ?? '',
                       onChanged:
