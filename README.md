@@ -59,10 +59,28 @@ flutter build apk --release --split-per-abi
 ```
 
 Output: `build/app/outputs/flutter-apk/app-arm64-v8a-release.apk` (~32 MB) for
-modern phones. It is **signed with the debug key** — fine for sideloading,
-replace with a real signing config before publishing (`android/app/build.gradle.kts`).
-The release build strips unused `com.tom_roush.pdfbox` / JPEG-2000 classes via
-`android/app/proguard-rules.pro`.
+modern phones. The release build strips unused `com.tom_roush.pdfbox` /
+JPEG-2000 classes via `android/app/proguard-rules.pro`.
+
+**Release signing:** if `android/key.properties` doesn't exist, the release
+build falls back to the debug key (fine for sideloading, not for a store
+listing). To sign with a real upload key:
+
+```sh
+keytool -genkeypair -v -keystore android/app/upload-keystore.jks \
+  -alias upload -keyalg RSA -keysize 2048 -validity 10957
+cat > android/key.properties <<EOF
+storePassword=<the password you just set>
+keyPassword=<same password — PKCS12 keystores don't support a separate one>
+keyAlias=upload
+storeFile=upload-keystore.jks
+EOF
+```
+
+Both `android/key.properties` and `android/app/*.jks` are gitignored — never
+commit them. Back the keystore and its password up somewhere durable (a
+password manager, not just this machine): losing it means you can never
+publish an update to an existing Play Store listing under the same app.
 
 **If a JDK error persists after `export JAVA_HOME=...`:** Flutter's own
 `flutter config --jdk-dir` setting (stored outside the repo, in Flutter's tool
