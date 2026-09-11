@@ -17,3 +17,8 @@ jobs:
       - run: flutter pub get
       - run: flutter analyze
       - run: flutter test
+      # Proves the Android toolchain actually resolves and compiles (manifest
+      # errors, Gradle config typos, plugin version conflicts) — `analyze`
+      # and `test` alone wouldn't catch a build break before it reaches main.
+      # Debug build only: no release signing key is available in CI.
+      - run: flutter build apk --debug

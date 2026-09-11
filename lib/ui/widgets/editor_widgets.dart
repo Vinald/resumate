@@ -78,7 +78,7 @@ class EditorField extends StatelessWidget {
 ///
 /// Backed by one [TextEditingController] per row so that reordering a row keeps
 /// its text with it (a plain `initialValue` field would show the previous row's
-/// text after a move — see REVIEW.md M1).
+/// text after a move).
 class StringListEditor extends StatefulWidget {
   const StringListEditor({
     super.key,

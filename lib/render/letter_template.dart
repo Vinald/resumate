@@ -1,3 +1,4 @@
+import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 
 import '../models/letter.dart';
@@ -8,5 +9,10 @@ abstract class LetterTemplate {
   String get id;
   String get name;
 
-  pw.Document build(LetterData data, PdfTheme theme, {List<int>? signature});
+  pw.Document build(
+    LetterData data,
+    PdfTheme theme, {
+    List<int>? signature,
+    PdfPageFormat pageFormat = PdfPageFormat.a4,
+  });
 }

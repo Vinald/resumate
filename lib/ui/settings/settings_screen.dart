@@ -68,7 +68,6 @@ class SettingsScreen extends StatelessWidget {
                         ),
                   );
                   if (ok == true) {
-                    // ignore: use_build_context_synchronously
                     update(s.copyWith(accentColor: picked.toARGB32()));
                   }
                 },

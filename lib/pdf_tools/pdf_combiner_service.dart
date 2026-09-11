@@ -1,8 +1,9 @@
 import 'dart:io';
 
 import 'package:path_provider/path_provider.dart';
+import 'package:pdf_combiner/exception/pdf_combiner_exception.dart';
+import 'package:pdf_combiner/models/merge_input.dart';
 import 'package:pdf_combiner/pdf_combiner.dart';
-import 'package:pdf_combiner/responses/pdf_combiner_status.dart';
 
 class PdfCombineResult {
   PdfCombineResult({required this.ok, this.path, this.error});
@@ -25,24 +26,19 @@ class PdfCombinerService {
     final outputPath = '${dir.path}/combined_$stamp.pdf';
 
     try {
-      final response = await PdfCombiner.mergeMultiplePDFs(
-        inputPaths: inputPaths,
+      final resolved = await PdfCombiner.mergeMultiplePDFs(
+        inputs: inputPaths.map(MergeInput.path).toList(),
         outputPath: outputPath,
       );
-      if (response.status == PdfCombinerStatus.success) {
-        final resolved = response.response ?? outputPath;
-        if (await File(resolved).exists()) {
-          return PdfCombineResult(ok: true, path: resolved);
-        }
-        return PdfCombineResult(
-          ok: false,
-          error: 'Merge reported success but no file was written.',
-        );
+      if (await File(resolved).exists()) {
+        return PdfCombineResult(ok: true, path: resolved);
       }
       return PdfCombineResult(
         ok: false,
-        error: response.message ?? 'Merge failed.',
+        error: 'Merge reported success but no file was written.',
       );
+    } on PdfCombinerException catch (e) {
+      return PdfCombineResult(ok: false, error: e.message);
     } catch (e) {
       return PdfCombineResult(ok: false, error: '$e');
     }

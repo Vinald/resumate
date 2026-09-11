@@ -1,3 +1,4 @@
+import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 
 import '../models/resume.dart';
@@ -8,5 +9,9 @@ abstract class ResumeTemplate {
   String get id;
   String get name;
 
-  pw.Document build(ResumeData data, PdfTheme theme);
+  pw.Document build(
+    ResumeData data,
+    PdfTheme theme, {
+    PdfPageFormat pageFormat = PdfPageFormat.a4,
+  });
 }
