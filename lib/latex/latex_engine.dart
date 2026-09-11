@@ -5,6 +5,31 @@ import '../models/document.dart';
 import '../models/letter.dart';
 import '../models/resume.dart';
 
+/// Percent-encodes the characters that break a LaTeX `\href{...}` URL
+/// argument if left raw: `#` is TeX's macro-parameter character and `%`
+/// starts a comment, so either can produce a broken or truncated `.tex` file
+/// outside of `\href`'s own url-verbatim handling. Leaves everything else —
+/// including an already-valid `%XX` escape — untouched, so a URL that's
+/// already correctly percent-encoded round-trips unchanged.
+String texUrl(String url) {
+  final buffer = StringBuffer();
+  for (var i = 0; i < url.length; i++) {
+    final ch = url[i];
+    if (ch == '#') {
+      buffer.write('%23');
+    } else if (ch == '%') {
+      final isValidEscape =
+          i + 2 < url.length && _isHex(url[i + 1]) && _isHex(url[i + 2]);
+      buffer.write(isValidEscape ? '%' : '%25');
+    } else {
+      buffer.write(ch);
+    }
+  }
+  return buffer.toString();
+}
+
+bool _isHex(String ch) => RegExp(r'^[0-9a-fA-F]$').hasMatch(ch);
+
 /// Escapes LaTeX-special characters in free text.
 String latexEscape(String input) {
   const map = {
@@ -50,12 +75,12 @@ class LatexEngine {
       'ACCENT_RGB': settings.accentRgb,
       'NAME': latexEscape(k.name),
       'TITLE': latexEscape(k.title),
-      'PORTFOLIO_URL': k.portfolioUrl,
+      'PORTFOLIO_URL': texUrl(k.portfolioUrl),
       'PHONE': latexEscape(k.phone),
       'EMAIL': k.email,
-      'GITHUB_URL': k.githubUrl,
+      'GITHUB_URL': texUrl(k.githubUrl),
       'GITHUB_LABEL': latexEscape(k.githubLabel.isEmpty ? 'GitHub' : k.githubLabel),
-      'LINKEDIN_URL': k.linkedinUrl,
+      'LINKEDIN_URL': texUrl(k.linkedinUrl),
       'LINKEDIN_LABEL':
           latexEscape(k.linkedinLabel.isEmpty ? 'LinkedIn' : k.linkedinLabel),
       'SUMMARY': latexEscape(r.summary),
@@ -78,12 +103,12 @@ class LatexEngine {
       'ACCENT_RGB': settings.accentRgb,
       'NAME': latexEscape(k.name),
       'TITLE': latexEscape(k.title),
-      'PORTFOLIO_URL': k.portfolioUrl,
+      'PORTFOLIO_URL': texUrl(k.portfolioUrl),
       'PHONE': latexEscape(k.phone),
       'EMAIL': k.email,
-      'GITHUB_URL': k.githubUrl,
+      'GITHUB_URL': texUrl(k.githubUrl),
       'GITHUB_LABEL': latexEscape(k.githubLabel.isEmpty ? 'GitHub' : k.githubLabel),
-      'LINKEDIN_URL': k.linkedinUrl,
+      'LINKEDIN_URL': texUrl(k.linkedinUrl),
       'LINKEDIN_LABEL':
           latexEscape(k.linkedinLabel.isEmpty ? 'LinkedIn' : k.linkedinLabel),
       'DATE': l.date.trim().isEmpty ? r'\today' : latexEscape(l.date),

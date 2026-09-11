@@ -292,11 +292,12 @@ Letter bodies are `resolve()`d (placeholders) **before** escaping. `<<DATE>>`
 falls back to `\today` when blank; `<<SIGNATURE_IMAGE>>` emits an
 `\includegraphics` line only when a signature path is set.
 
-> Known gap: the email contact token is escaped and wrapped in
-> `\nolinkurl{}`, but `PORTFOLIO_URL` / `GITHUB_URL` / `LINKEDIN_URL` still go
-> straight into `\href{...}` unescaped — `#` or `%` in one of those URLs would
-> still break the `.tex`. Low priority (query-string URLs are rare in a CV's
-> contact block).
+`PORTFOLIO_URL` / `GITHUB_URL` / `LINKEDIN_URL` go into `\href{...}` through
+`texUrl()`, not `latexEscape()` — LaTeX-escaping a URL (backslash commands
+like `\%`) would break it as a URL. `texUrl()` instead percent-encodes just
+the two characters that break a raw `\href` URL argument (`#`, TeX's
+macro-parameter character, and an unescaped `%`, a comment character),
+leaving an already-valid `%XX` escape untouched.
 
 ### Export (`lib/export/`)
 
@@ -370,6 +371,11 @@ action.
   really meant for Android / iOS (native renderer).
 - **Fonts** are declared under `fonts:` in `pubspec.yaml` and loaded via
   `rootBundle` in `render/pdf_theme.dart`.
+- **App icon / splash screen** are generated from `assets/icon/` (a blue
+  `#0000FF` "R" monogram in EB Garamond Bold, matching the in-app look) via
+  the `flutter_launcher_icons` / `flutter_native_splash` dev tools, configured
+  in `pubspec.yaml`. To regenerate after changing the source images:
+  `dart run flutter_launcher_icons && dart run flutter_native_splash:create`.
 
 ---
 
@@ -380,22 +386,35 @@ flutter analyze
 flutter test
 ```
 
-38 tests cover: model JSON round-trips, `DocumentRepository` CRUD + sort,
-seed-data shape, the LaTeX token engine + escaping, DOCX zip structure +
+53 tests cover: model JSON round-trips, `DocumentRepository` CRUD + sort,
+seed-data shape, the LaTeX token engine + escaping (including `texUrl`'s
+percent-encoding of `#`/`%` in contact URLs), DOCX zip structure +
 placeholder resolution + XML escaping, plain-text / Markdown output, raw PDF
 rendering (resume + letter), the reorderable list editor, the first-launch
-tutorial prompt, signature image re-encoding, and the resume editor's
-dirty-state flow.
+tutorial prompt, signature image re-encoding, the resume editor's dirty-state
+flow, and a widget-test smoke pass over every remaining screen: `Settings`,
+`Preview`, `LatexEditor` (load/banner/tokens/copy), `PdfCombiner`,
+`ExportSheet`, and `contact_section.dart`.
 
 CI (`.github/workflows/ci.yml`) runs `flutter pub get` / `analyze` / `test` /
 a debug APK build on every push to `main` and every PR.
 
-**Screens still without dedicated widget tests:** `SettingsScreen`,
-`PreviewScreen`, `LatexEditorScreen` (loading/copy/share/token sheet),
-`PdfCombinerScreen`, `ExportSheet`, and `contact_section.dart`. Not blocking,
-but a good place to add coverage next — see the two gotchas documented at the
-top of `test/home_screen_tutorial_test.dart` before writing more `testWidgets`
-cases that trigger real file I/O.
+Two non-obvious gotchas beyond the two already documented at the top of
+`test/home_screen_tutorial_test.dart`, hit while adding the screen tests
+above:
+
+- `rootBundle.loadString` (asset loading, e.g. `LatexEngine`'s templates)
+  resolves fine within a *single* `testWidgets`, but a **second**,
+  independent `testWidgets` in the same file/isolate that loads the same
+  asset again can hang forever instead of returning the cached result — see
+  the comment at the top of `test/latex_editor_screen_test.dart`. Fixed by
+  covering everything that needs the loaded screen in one combined test
+  rather than one `testWidgets` per scenario.
+- A screen taller than the default 800×600 test surface (`SettingsScreen`)
+  needs either scrolling or a resized `tester.view.physicalSize` before its
+  lower widgets are hit-testable — see `test/settings_screen_test.dart`.
+  Plain `scrollUntilVisible()` can also pick the wrong `Scrollable` when the
+  page has `TextFormField`s (each has its own internal horizontal one).
 
 ---
 
@@ -405,8 +424,6 @@ cases that trigger real file I/O.
   document (the screen says so).
 - A brand-new resume starts pre-filled with the whole seed CV instead of
   blank — a deliberate-but-debatable default in `DocumentStore.create`.
-- `PORTFOLIO_URL` / `GITHUB_URL` / `LINKEDIN_URL` are not escaped in `.tex`
-  output (see the LaTeX section above).
 - `pdf` / `printing` / `archive` are held below their latest majors pending a
   Dart SDK bump (see Dependency notes).
 - No `==`/`hashCode` on the data models.
