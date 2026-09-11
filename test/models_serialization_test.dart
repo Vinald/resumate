@@ -93,4 +93,18 @@ void main() {
     expect(restored.accentColor, 0xFF0000FF);
     expect(restored.bodyFont, BodyFont.ebGaramond);
   });
+
+  test('AppSettings defaults tutorialSeen to false and round-trips it', () {
+    expect(AppSettings().tutorialSeen, isFalse);
+
+    final settings = AppSettings(tutorialSeen: true);
+    final restored = AppSettings.fromJson(
+      jsonDecode(jsonEncode(settings.toJson())) as Map<String, dynamic>,
+    );
+    expect(restored.tutorialSeen, isTrue);
+
+    // Settings saved before this field existed shouldn't re-trigger the prompt.
+    final legacy = AppSettings.fromJson({'accentColor': 0xFF0000FF});
+    expect(legacy.tutorialSeen, isFalse);
+  });
 }

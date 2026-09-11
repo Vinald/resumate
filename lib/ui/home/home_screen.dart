@@ -3,17 +3,74 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../../data/document_store.dart';
+import '../../data/settings_store.dart';
 import '../../models/document.dart';
 import '../letter_editor/letter_editor_screen.dart';
 import '../pdf_combiner/pdf_combiner_screen.dart';
 import '../resume_editor/resume_editor_screen.dart';
 import '../settings/settings_screen.dart';
+import '../tutorial/tutorial_screen.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
   @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  bool _promptedTutorial = false;
+
+  /// Shows the "Welcome" prompt once, the first time settings have finished
+  /// loading and no prior launch has already dismissed it.
+  void _maybeShowTutorialPrompt(SettingsStore settingsStore) {
+    if (_promptedTutorial ||
+        settingsStore.loading ||
+        settingsStore.settings.tutorialSeen) {
+      return;
+    }
+    _promptedTutorial = true;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) _showTutorialPrompt(settingsStore);
+    });
+  }
+
+  Future<void> _showTutorialPrompt(SettingsStore settingsStore) async {
+    final openTutorial = await showDialog<bool>(
+      context: context,
+      builder:
+          (_) => AlertDialog(
+            title: const Text('Welcome to Resumate'),
+            content: const Text(
+              'New here? A quick walkthrough covers editing, previewing, '
+              'signatures and exporting.',
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context, false),
+                child: const Text('Skip'),
+              ),
+              FilledButton(
+                onPressed: () => Navigator.pop(context, true),
+                child: const Text('Show me'),
+              ),
+            ],
+          ),
+    );
+    await settingsStore.update(
+      settingsStore.settings.copyWith(tutorialSeen: true),
+    );
+    if (openTutorial == true && mounted) {
+      Navigator.of(
+        context,
+      ).push(MaterialPageRoute(builder: (_) => const TutorialScreen()));
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
+    _maybeShowTutorialPrompt(context.watch<SettingsStore>());
+
     return DefaultTabController(
       length: 2,
       child: Scaffold(
@@ -23,6 +80,14 @@ class HomeScreen extends StatelessWidget {
             tabs: [Tab(text: 'Resumes'), Tab(text: 'Letters')],
           ),
           actions: [
+            IconButton(
+              tooltip: 'How Resumate works',
+              icon: const Icon(Icons.help_outline),
+              onPressed:
+                  () => Navigator.of(context).push(
+                    MaterialPageRoute(builder: (_) => const TutorialScreen()),
+                  ),
+            ),
             IconButton(
               tooltip: 'Combine PDFs',
               icon: const Icon(Icons.merge_type),

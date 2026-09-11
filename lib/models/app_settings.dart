@@ -21,6 +21,7 @@ class AppSettings {
     this.marginInches = 0.6,
     this.lineSpacing = 1.3,
     this.bodyFont = BodyFont.ebGaramond,
+    this.tutorialSeen = false,
   }) : defaultContact = defaultContact ?? const ContactInfo();
 
   ContactInfo defaultContact;
@@ -31,6 +32,9 @@ class AppSettings {
   double marginInches;
   double lineSpacing;
   BodyFont bodyFont;
+
+  /// Whether the first-launch "Welcome" tutorial prompt has already been shown.
+  bool tutorialSeen;
 
   /// The accent colour split into 0-255 R, G, B for `.tex` output.
   String get accentRgb {
@@ -48,6 +52,7 @@ class AppSettings {
     double? marginInches,
     double? lineSpacing,
     BodyFont? bodyFont,
+    bool? tutorialSeen,
   }) {
     return AppSettings(
       defaultContact: defaultContact ?? this.defaultContact,
@@ -57,6 +62,7 @@ class AppSettings {
       marginInches: marginInches ?? this.marginInches,
       lineSpacing: lineSpacing ?? this.lineSpacing,
       bodyFont: bodyFont ?? this.bodyFont,
+      tutorialSeen: tutorialSeen ?? this.tutorialSeen,
     );
   }
 
@@ -67,6 +73,7 @@ class AppSettings {
     'marginInches': marginInches,
     'lineSpacing': lineSpacing,
     'bodyFont': bodyFont.name,
+    'tutorialSeen': tutorialSeen,
   };
 
   factory AppSettings.fromJson(Map<String, dynamic> json) => AppSettings(
@@ -81,5 +88,6 @@ class AppSettings {
       (f) => f.name == json['bodyFont'],
       orElse: () => BodyFont.ebGaramond,
     ),
+    tutorialSeen: json['tutorialSeen'] as bool? ?? false,
   );
 }
