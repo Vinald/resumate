@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'ui/home/home_screen.dart';
 
-class ResumeGeneratorApp extends StatelessWidget {
-  const ResumeGeneratorApp({super.key});
+class ResumateApp extends StatelessWidget {
+  const ResumateApp({super.key});
 
   @override
   Widget build(BuildContext context) {
