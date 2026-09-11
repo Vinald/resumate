@@ -73,23 +73,53 @@ class _CreateFab extends StatelessWidget {
   Widget build(BuildContext context) {
     return FloatingActionButton.extended(
       onPressed: () async {
+        final colorScheme = Theme.of(context).colorScheme;
         final type = await showModalBottomSheet<DocumentType>(
           context: context,
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+          ),
           builder:
               (_) => SafeArea(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
+                    const Padding(
+                      padding: EdgeInsets.fromLTRB(20, 16, 20, 4),
+                      child: Row(
+                        children: [
+                          Text(
+                            'New document',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                     for (final t in DocumentType.values)
                       ListTile(
-                        leading: Icon(
-                          t == DocumentType.resume
-                              ? Icons.description
-                              : Icons.mail_outline,
+                        leading: CircleAvatar(
+                          backgroundColor:
+                              t == DocumentType.resume
+                                  ? colorScheme.primaryContainer
+                                  : colorScheme.secondaryContainer,
+                          foregroundColor:
+                              t == DocumentType.resume
+                                  ? colorScheme.onPrimaryContainer
+                                  : colorScheme.onSecondaryContainer,
+                          child: Icon(
+                            t == DocumentType.resume
+                                ? Icons.description_outlined
+                                : Icons.mail_outline,
+                            size: 20,
+                          ),
                         ),
                         title: Text(t.label),
                         onTap: () => Navigator.of(context).pop(t),
                       ),
+                    const SizedBox(height: 8),
                   ],
                 ),
               ),
@@ -126,34 +156,78 @@ class _DocumentList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     if (documents.isEmpty) {
       return Center(
-        child: Text(emptyLabel, style: Theme.of(context).textTheme.bodyLarge),
+        child: Padding(
+          padding: const EdgeInsets.all(32),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                Icons.note_add_outlined,
+                size: 56,
+                color: colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
+              ),
+              const SizedBox(height: 12),
+              Text(
+                emptyLabel,
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  color: colorScheme.onSurfaceVariant,
+                ),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                'Tap New to create one.',
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  color: colorScheme.onSurfaceVariant.withValues(alpha: 0.8),
+                ),
+              ),
+            ],
+          ),
+        ),
       );
     }
     final fmt = DateFormat.yMMMd().add_jm();
     return ListView.builder(
-      padding: const EdgeInsets.only(bottom: 88),
+      padding: const EdgeInsets.fromLTRB(4, 8, 4, 96),
       itemCount: documents.length,
       itemBuilder: (context, i) {
         final doc = documents[i];
-        return ListTile(
-          leading: Icon(
-            doc.type == DocumentType.resume
-                ? Icons.description_outlined
-                : Icons.mail_outline,
-          ),
-          title: Text(doc.title),
-          subtitle: Text('${doc.type.label} · ${fmt.format(doc.updatedAt)}'),
-          onTap: () => _openDocument(context, doc),
-          trailing: PopupMenuButton<String>(
-            onSelected: (value) => _onMenu(context, doc, value),
-            itemBuilder:
-                (_) => const [
-                  PopupMenuItem(value: 'rename', child: Text('Rename')),
-                  PopupMenuItem(value: 'duplicate', child: Text('Duplicate')),
-                  PopupMenuItem(value: 'delete', child: Text('Delete')),
-                ],
+        final isResume = doc.type == DocumentType.resume;
+        return Card(
+          child: ListTile(
+            contentPadding: const EdgeInsets.fromLTRB(12, 4, 4, 4),
+            leading: CircleAvatar(
+              backgroundColor:
+                  isResume
+                      ? colorScheme.primaryContainer
+                      : colorScheme.secondaryContainer,
+              foregroundColor:
+                  isResume
+                      ? colorScheme.onPrimaryContainer
+                      : colorScheme.onSecondaryContainer,
+              child: Icon(
+                isResume ? Icons.description_outlined : Icons.mail_outline,
+                size: 20,
+              ),
+            ),
+            title: Text(
+              doc.title,
+              style: const TextStyle(fontWeight: FontWeight.w600),
+            ),
+            subtitle: Text('${doc.type.label} · ${fmt.format(doc.updatedAt)}'),
+            onTap: () => _openDocument(context, doc),
+            trailing: PopupMenuButton<String>(
+              onSelected: (value) => _onMenu(context, doc, value),
+              itemBuilder:
+                  (_) => const [
+                    PopupMenuItem(value: 'rename', child: Text('Rename')),
+                    PopupMenuItem(value: 'duplicate', child: Text('Duplicate')),
+                    PopupMenuItem(value: 'delete', child: Text('Delete')),
+                  ],
+            ),
           ),
         );
       },
