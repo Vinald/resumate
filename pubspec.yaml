@@ -1,7 +1,7 @@
 name: resumate
 description: "Resumate — generate resumes, cover letters and application letters on your phone, export to PDF, DOCX, text and LaTeX, and combine PDFs."
 publish_to: 'none'
-version: 1.0.0+1
+version: 1.1.0+2
 
 environment:
   sdk: ^3.10.4
@@ -45,6 +45,25 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^6.0.0
+  # App icon + splash screen generators (dev-only; `dart run ...` regenerates
+  # the platform assets under android/ and ios/ from assets/icon/*.png).
+  flutter_launcher_icons: ^0.14.4
+  flutter_native_splash: ^2.4.4
+
+flutter_launcher_icons:
+  image_path: "assets/icon/icon.png"
+  android: true
+  ios: true
+  remove_alpha_ios: true
+  adaptive_icon_background: "#0000FF"
+  adaptive_icon_foreground: "assets/icon/icon_foreground.png"
+
+flutter_native_splash:
+  color: "#FFFFFF"
+  image: "assets/icon/splash_logo.png"
+  android_12:
+    color: "#FFFFFF"
+    image: "assets/icon/splash_logo.png"
 
 flutter:
   uses-material-design: true
