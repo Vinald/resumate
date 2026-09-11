@@ -4,7 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:image/image.dart' as img;
 import 'package:resumate/ui/widgets/signature_picker.dart';
 
-/// Regression coverage for M3 (REVIEW.md): `SignaturePicker` used to copy
+/// Regression coverage: `SignaturePicker` used to copy
 /// whatever `image_picker` returned straight to `signature.png`, so a HEIC
 /// or WebP asset saved under a `.png` name would later crash
 /// `pw.MemoryImage` in letter exports. `decodeAndReencodeSignaturePng` is the

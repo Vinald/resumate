@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:resumate/ui/widgets/editor_widgets.dart';
 
-/// Regression test for REVIEW.md M1: reordering a row must keep its text with it,
-/// both in the emitted list and in what the fields display.
+/// Regression test: reordering a row must keep its text with it, both in the
+/// emitted list and in what the fields display.
 void main() {
   Future<void> pumpEditor(
     WidgetTester tester,

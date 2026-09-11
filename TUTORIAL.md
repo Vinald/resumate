@@ -104,6 +104,5 @@ edit, or delete them like anything else. To add a new one from scratch, tap
 
 ---
 
-Ran into something that doesn't work as described? Check
-[`REVIEW.md`](REVIEW.md) for known issues, or see the **Support** section in
-[`README.md`](README.md).
+Ran into something that doesn't work as described? Check the **Known
+limitations** and **Support** sections in [`README.md`](README.md).

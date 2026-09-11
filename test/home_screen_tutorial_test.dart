@@ -82,8 +82,8 @@ void main() {
       // (SettingsStore.update → SettingsRepository.save), and in this
       // environment a genuine dart:io Future triggered as a side effect of
       // pumping does not reliably resume within a widget test's fake-clock
-      // budget — not even inside `tester.runAsync()`. See REVIEW.md / git
-      // history on this file for the investigation.
+      // budget — not even inside `tester.runAsync()`. See this file's git
+      // history for the investigation.
     });
 
     testWidgets('skipping still marks it seen', (tester) async {
