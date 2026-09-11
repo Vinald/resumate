@@ -17,6 +17,28 @@ void main() {
     expect(latexEscape(r'a$b#c'), r'a\$b\#c');
   });
 
+  test('texUrl percent-encodes raw # and % without double-encoding', () {
+    expect(texUrl('https://x.com/a#section'), 'https://x.com/a%23section');
+    expect(texUrl('https://x.com/100% done'), 'https://x.com/100%25 done');
+    expect(texUrl('https://x.com/a%20b'), 'https://x.com/a%20b');
+    expect(texUrl('https://x.com/plain'), 'https://x.com/plain');
+  });
+
+  test('a # or % in a contact URL never reaches the .tex output raw',
+      () async {
+    final doc = SeedData.initialDocuments().firstWhere(
+      (d) => d.type == DocumentType.resume,
+    );
+    doc.resume!.contact = doc.resume!.contact.copyWith(
+      portfolioUrl: 'https://x.dev/cv#top',
+      githubUrl: 'https://github.com/x?tab=repos%',
+    );
+
+    final tex = await engine.render(doc, settings);
+    expect(tex, contains(r'\href{https://x.dev/cv%23top}'));
+    expect(tex, contains(r'\href{https://github.com/x?tab=repos%25}'));
+  });
+
   test('resume render fills every token', () async {
     final doc = SeedData.initialDocuments().firstWhere(
       (d) => d.type == DocumentType.resume,
