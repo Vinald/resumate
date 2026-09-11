@@ -64,6 +64,19 @@ replace with a real signing config before publishing (`android/app/build.gradle.
 The release build strips unused `com.tom_roush.pdfbox` / JPEG-2000 classes via
 `android/app/proguard-rules.pro`.
 
+**If a JDK error persists after `export JAVA_HOME=...`:** Flutter's own
+`flutter config --jdk-dir` setting (stored outside the repo, in Flutter's tool
+state) takes priority over the `JAVA_HOME` environment variable and can be
+stuck pointing at an uninstalled JDK — the error message looks identical to
+the "`JAVA_HOME` not set" case either way. Fix it directly:
+`flutter config --jdk-dir=/Library/Java/JavaVirtualMachines/jdk-21.jdk/Contents/Home`.
+If a build was killed (e.g. `kill -9`, an interrupted `flutter run`) rather
+than exited cleanly, a Gradle daemon or Kotlin compile daemon can also be left
+running in the background pinned to the old JDK, causing the same symptom (or
+a `VerifyError` from mixed Kotlin-runtime classpaths) even after the config is
+fixed — check `ps aux | grep -E "GradleDaemon|KotlinCompileDaemon"` and kill
+any stale ones.
+
 ---
 
 ## Architecture
