@@ -361,5 +361,8 @@ Future<String?> _promptText(
             ),
           ],
         ),
-  );
+  ).then((value) {
+    controller.dispose();
+    return value;
+  });
 }

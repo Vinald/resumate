@@ -1,11 +1,30 @@
 import 'dart:io';
+import 'dart:typed_data';
 
+import 'package:flutter/foundation.dart' show compute;
 import 'package:flutter/material.dart';
+import 'package:image/image.dart' as img;
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 
 import '../../data/settings_store.dart';
+
+/// Runs off the UI isolate: decodes whatever bytes the gallery handed back —
+/// HEIC, WebP, GIF, or a genuine PNG/JPEG — and re-encodes as a real PNG.
+/// `image_picker` returns the asset in its original container regardless of
+/// what extension we ask for, so without this step a non-PNG file gets saved
+/// as `signature.png` and breaks `pw.MemoryImage` / Overleaf later. Returns
+/// null if the bytes aren't a decodable image at all.
+Uint8List? decodeAndReencodeSignaturePng(Uint8List bytes) {
+  try {
+    final decoded = img.decodeImage(bytes);
+    if (decoded == null) return null;
+    return Uint8List.fromList(img.encodePng(decoded));
+  } catch (_) {
+    return null;
+  }
+}
 
 /// Pick / preview / remove the signature image. The image is stored once in
 /// [SettingsStore] and reused by every letter (PDF and `.tex` output).
@@ -19,8 +38,27 @@ class SignaturePicker extends StatelessWidget {
     final picker = ImagePicker();
     final file = await picker.pickImage(source: ImageSource.gallery);
     if (file == null) return;
+
+    final rawBytes = await File(file.path).readAsBytes();
+    final pngBytes = await compute(decodeAndReencodeSignaturePng, rawBytes);
+    if (pngBytes == null) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text(
+              "That image couldn't be read as a picture — try a different one.",
+            ),
+          ),
+        );
+      }
+      return;
+    }
+
     final dir = await getApplicationDocumentsDirectory();
-    final saved = await File(file.path).copy('${dir.path}/signature.png');
+    final saved = await File(
+      '${dir.path}/signature.png',
+    ).writeAsBytes(pngBytes);
+    if (!context.mounted) return;
     await store.update(
       store.settings.copyWith(signatureImagePath: saved.path),
     );

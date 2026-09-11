@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 
 import '../../data/document_store.dart';
 import '../../data/settings_store.dart';
+import '../../export/filename.dart';
 import '../../render/document_pdf.dart';
 
 class PreviewScreen extends StatelessWidget {
@@ -20,11 +21,10 @@ class PreviewScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: Text('Preview · ${doc.title}')),
       body: PdfPreview(
-        build: (_) => buildDocumentPdf(doc, settings),
+        build: (format) => buildDocumentPdf(doc, settings, pageFormat: format),
         canDebug: false,
         initialPageFormat: PdfPageFormat.a4,
-        pdfFileName:
-            '${doc.title.replaceAll(RegExp(r'[^A-Za-z0-9]+'), '_')}.pdf',
+        pdfFileName: '${safeExportFilename(doc)}.pdf',
       ),
     );
   }

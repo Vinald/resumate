@@ -20,7 +20,12 @@ class ClassicLetterTemplate implements LetterTemplate {
   String get name => 'Classic Letter';
 
   @override
-  pw.Document build(LetterData data, PdfTheme theme, {List<int>? signature}) {
+  pw.Document build(
+    LetterData data,
+    PdfTheme theme, {
+    List<int>? signature,
+    PdfPageFormat pageFormat = PdfPageFormat.a4,
+  }) {
     final c = PdfComponents(theme);
     final doc = pw.Document();
     final k = data.contact;
@@ -53,7 +58,7 @@ class ClassicLetterTemplate implements LetterTemplate {
     doc.addPage(
       pw.MultiPage(
         theme: theme.theme,
-        pageFormat: PdfPageFormat.a4.copyWith(
+        pageFormat: pageFormat.copyWith(
           marginTop: theme.marginPt,
           marginBottom: theme.marginPt,
           marginLeft: theme.marginPt,
@@ -101,12 +106,7 @@ class ClassicLetterTemplate implements LetterTemplate {
           pw.SizedBox(height: 6),
           pw.Text(data.closing),
           pw.SizedBox(height: 6),
-          if (signature != null)
-            pw.Image(
-              pw.MemoryImage(Uint8List.fromList(signature)),
-              height: 44,
-              alignment: pw.Alignment.centerLeft,
-            ),
+          ?_buildSignatureImage(signature),
           pw.SizedBox(height: 4),
           pw.Text(
             data.signatureName.isEmpty ? k.name : data.signatureName,
@@ -116,5 +116,22 @@ class ClassicLetterTemplate implements LetterTemplate {
       ),
     );
     return doc;
+  }
+
+  /// Guards against a corrupt/mis-encoded signature file (e.g. one saved by
+  /// an older build, before `SignaturePicker` started re-encoding to PNG on
+  /// pick): `pw.MemoryImage` decodes eagerly and throws on bad bytes, which
+  /// would otherwise take down the whole letter PDF.
+  pw.Widget? _buildSignatureImage(List<int>? bytes) {
+    if (bytes == null) return null;
+    try {
+      return pw.Image(
+        pw.MemoryImage(Uint8List.fromList(bytes)),
+        height: 44,
+        alignment: pw.Alignment.centerLeft,
+      );
+    } catch (_) {
+      return null;
+    }
   }
 }

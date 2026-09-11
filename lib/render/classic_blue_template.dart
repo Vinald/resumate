@@ -17,14 +17,18 @@ class ClassicBlueTemplate implements ResumeTemplate {
   String get name => 'Classic Blue';
 
   @override
-  pw.Document build(ResumeData data, PdfTheme theme) {
+  pw.Document build(
+    ResumeData data,
+    PdfTheme theme, {
+    PdfPageFormat pageFormat = PdfPageFormat.a4,
+  }) {
     final c = PdfComponents(theme);
     final doc = pw.Document();
 
     doc.addPage(
       pw.MultiPage(
         theme: theme.theme,
-        pageFormat: PdfPageFormat.a4.copyWith(
+        pageFormat: pageFormat.copyWith(
           marginTop: theme.marginPt,
           marginBottom: theme.marginPt,
           marginLeft: theme.marginPt,

@@ -8,9 +8,10 @@ import 'package:share_plus/share_plus.dart';
 
 import '../../data/document_store.dart';
 import '../../data/settings_store.dart';
+import '../../export/filename.dart';
+import '../../export/tex_export.dart';
 import '../../latex/tokens.dart';
 import '../../models/document.dart';
-import '../../export/tex_export.dart';
 
 class LatexEditorScreen extends StatefulWidget {
   const LatexEditorScreen({super.key, required this.documentId});
@@ -24,6 +25,7 @@ class LatexEditorScreen extends StatefulWidget {
 class _LatexEditorScreenState extends State<LatexEditorScreen> {
   final _controller = TextEditingController();
   bool _loading = true;
+  bool _showUnsavedBanner = true;
   late GeneratedDocument _doc;
 
   @override
@@ -42,8 +44,7 @@ class _LatexEditorScreenState extends State<LatexEditorScreen> {
   Future<void> _shareTex() async {
     final sigPath = context.read<SettingsStore>().settings.signatureImagePath;
     final dir = await getTemporaryDirectory();
-    final safe = _doc.title.replaceAll(RegExp(r'[^A-Za-z0-9]+'), '_');
-    final file = File('${dir.path}/$safe.tex');
+    final file = File('${dir.path}/${safeExportFilename(_doc)}.tex');
     await file.writeAsString(_controller.text);
 
     final files = [XFile(file.path)];
@@ -124,23 +125,45 @@ class _LatexEditorScreenState extends State<LatexEditorScreen> {
       body:
           _loading
               ? const Center(child: CircularProgressIndicator())
-              : Padding(
-                padding: const EdgeInsets.all(8),
-                child: TextField(
-                  controller: _controller,
-                  maxLines: null,
-                  expands: true,
-                  textAlignVertical: TextAlignVertical.top,
-                  style: const TextStyle(
-                    fontFamily: 'monospace',
-                    fontSize: 12,
-                    height: 1.35,
+              : Column(
+                children: [
+                  if (_showUnsavedBanner)
+                    MaterialBanner(
+                      content: const Text(
+                        "Edits here aren't saved back to your document — "
+                        'use Copy or Share to keep changes.',
+                      ),
+                      leading: const Icon(Icons.info_outline),
+                      actions: [
+                        TextButton(
+                          onPressed:
+                              () =>
+                                  setState(() => _showUnsavedBanner = false),
+                          child: const Text('Got it'),
+                        ),
+                      ],
+                    ),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8),
+                      child: TextField(
+                        controller: _controller,
+                        maxLines: null,
+                        expands: true,
+                        textAlignVertical: TextAlignVertical.top,
+                        style: const TextStyle(
+                          fontFamily: 'monospace',
+                          fontSize: 12,
+                          height: 1.35,
+                        ),
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(),
+                          alignLabelWithHint: true,
+                        ),
+                      ),
+                    ),
                   ),
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    alignLabelWithHint: true,
-                  ),
-                ),
+                ],
               ),
     );
   }

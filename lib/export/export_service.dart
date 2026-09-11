@@ -7,6 +7,7 @@ import '../models/app_settings.dart';
 import '../models/document.dart';
 import '../render/document_pdf.dart';
 import 'docx_export.dart';
+import 'filename.dart';
 import 'tex_export.dart';
 import 'text_export.dart';
 
@@ -31,8 +32,9 @@ class ExportService {
     ExportFormat format,
   ) async {
     final dir = await getTemporaryDirectory();
-    final safeName = doc.title.replaceAll(RegExp(r'[^A-Za-z0-9]+'), '_');
-    final file = File('${dir.path}/$safeName.${format.extension}');
+    final file = File(
+      '${dir.path}/${safeExportFilename(doc)}.${format.extension}',
+    );
 
     switch (format) {
       case ExportFormat.pdf:
