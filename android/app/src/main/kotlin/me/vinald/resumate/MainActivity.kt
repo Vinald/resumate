@@ -1,4 +1,4 @@
-package com.vinald.resume_generator
+package me.vinald.resumate
 
 import io.flutter.embedding.android.FlutterActivity
 
