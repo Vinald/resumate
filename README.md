@@ -31,6 +31,9 @@ Edit it in place, or replace `lib/data/seed_data.dart`, to make it yours.
 
 ## Getting started
 
+New to the app itself (not the codebase)? See [`TUTORIAL.md`](TUTORIAL.md) for a
+first-run walkthrough.
+
 Requires the Flutter SDK (channel `stable`, version `3.38.5` — see CI).
 
 ```sh
