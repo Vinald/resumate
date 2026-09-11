@@ -1,10 +1,10 @@
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:resume_generator/data/seed_data.dart';
-import 'package:resume_generator/latex/latex_engine.dart';
-import 'package:resume_generator/models/app_settings.dart';
-import 'package:resume_generator/models/document.dart';
+import 'package:resumate/data/seed_data.dart';
+import 'package:resumate/latex/latex_engine.dart';
+import 'package:resumate/models/app_settings.dart';
+import 'package:resumate/models/document.dart';
 
 Future<String> _loadFromDisk(String asset) => File(asset).readAsString();
 

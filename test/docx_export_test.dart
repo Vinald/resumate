@@ -2,9 +2,9 @@ import 'dart:convert';
 
 import 'package:archive/archive.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:resume_generator/data/seed_data.dart';
-import 'package:resume_generator/export/docx_export.dart';
-import 'package:resume_generator/models/document.dart';
+import 'package:resumate/data/seed_data.dart';
+import 'package:resumate/export/docx_export.dart';
+import 'package:resumate/models/document.dart';
 
 void main() {
   Archive unzip(List<int> bytes) => ZipDecoder().decodeBytes(bytes);

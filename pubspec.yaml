@@ -1,5 +1,5 @@
-name: resume_generator
-description: "Generate resumes, cover letters and application letters on your phone, export to PDF, DOCX, text and LaTeX, and combine PDFs."
+name: resumate
+description: "Resumate — generate resumes, cover letters and application letters on your phone, export to PDF, DOCX, text and LaTeX, and combine PDFs."
 publish_to: 'none'
 version: 1.0.0+1
 

@@ -1,8 +1,8 @@
 import 'dart:convert';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:resume_generator/data/seed_data.dart';
-import 'package:resume_generator/models/document.dart';
+import 'package:resumate/data/seed_data.dart';
+import 'package:resumate/models/document.dart';
 
 void main() {
   test('seed documents cover resume + both letter types', () {

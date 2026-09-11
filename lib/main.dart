@@ -19,7 +19,7 @@ void main() {
         ChangeNotifierProvider.value(value: documentStore),
         ChangeNotifierProvider.value(value: settingsStore),
       ],
-      child: const ResumeGeneratorApp(),
+      child: const ResumateApp(),
     ),
   );
 }

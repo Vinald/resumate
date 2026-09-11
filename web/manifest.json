@@ -1,11 +1,11 @@
 {
-    "name": "resume_generator",
-    "short_name": "resume_generator",
+    "name": "Resumate",
+    "short_name": "Resumate",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "description": "Build resumes, cover letters and application letters, and export to PDF, DOCX, text, Markdown or LaTeX.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

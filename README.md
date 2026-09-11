@@ -1,4 +1,4 @@
-# Resume Generator
+# Resumate
 
 A Flutter app (Android + iOS, with web builds for quick previews) for building
 **resumes**, **cover letters** and **application letters** on your phone and
@@ -30,6 +30,9 @@ Edit it in place, or replace `lib/data/seed_data.dart`, to make it yours.
 ---
 
 ## Getting started
+
+New to the app itself (not the codebase)? See [`TUTORIAL.md`](TUTORIAL.md) for a
+first-run walkthrough.
 
 Requires the Flutter SDK (channel `stable`, version `3.38.5` — see CI).
 
@@ -161,12 +164,11 @@ flutter analyze
 flutter test
 ```
 
-24 unit tests cover: model JSON round-trips, `DocumentRepository` CRUD + sort,
+27 tests cover: model JSON round-trips, `DocumentRepository` CRUD + sort,
 seed-data shape, the LaTeX token engine + escaping, DOCX zip structure +
-placeholder resolution + XML escaping, plain-text / Markdown output, and raw PDF
-rendering (resume + letter).
-
-There are **no widget or integration tests** yet — see `REVIEW.md` (I1).
+placeholder resolution + XML escaping, plain-text / Markdown output, raw PDF
+rendering (resume + letter), and (as of `fix/safe-bugs`) a first slice of widget
+coverage for the reorderable list editor.
 
 CI (`.github/workflows/ci.yml`) runs `flutter pub get` / `analyze` / `test` on
 every push to `main` and every PR.
@@ -175,13 +177,18 @@ every push to `main` and every PR.
 
 ## Known limitations
 
-Short list — the full analysis is in [`REVIEW.md`](REVIEW.md).
+Short list of what's still open — the full analysis (including what's already
+fixed) is in [`REVIEW.md`](REVIEW.md).
 
-- **iOS:** the signature picker needs `NSPhotoLibraryUsageDescription` in
-  `Info.plist` (fix in flight).
-- Reordering an entry in the resume editor can leave stale text in the form
-  fields until the screen is reopened.
-- `.tex` export doesn't escape URLs / email addresses, so LaTeX-special
-  characters (`_`, `#`, `%`) in those fields break compilation.
-- LaTeX editor edits are not persisted.
+- Signature images are used as-is; a non-PNG/JPEG pick (e.g. HEIC) can fail to
+  render on export.
+- Settings are written to disk on every keystroke / slider frame rather than
+  debounced.
+- A brand-new resume starts pre-filled with the whole seed CV instead of blank.
+- LaTeX editor edits are a scratch buffer and are not saved back to the document.
 - Release APK is debug-signed.
+
+## Support
+
+Questions, bugs, or feature requests: open an issue on this repo, or reach the
+maintainer directly at **okiror1vinald@gmail.com**.

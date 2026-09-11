@@ -18,7 +18,7 @@ class HomeScreen extends StatelessWidget {
       length: 2,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Resume Generator'),
+          title: const Text('Resumate'),
           bottom: const TabBar(
             tabs: [Tab(text: 'Resumes'), Tab(text: 'Letters')],
           ),
