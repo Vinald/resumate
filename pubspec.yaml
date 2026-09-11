@@ -21,8 +21,8 @@ dependencies:
   pdf_combiner: ^3.1.0
 
   # Files, sharing, storage
-  file_picker: ^8.1.4
-  share_plus: ^10.1.2
+  file_picker: ^11.0.3
+  share_plus: ^11.1.0
   path_provider: ^2.1.5
 
   # DOCX (zip of XML)
@@ -38,7 +38,7 @@ dependencies:
 
   # Misc
   uuid: ^4.5.1
-  intl: ^0.19.0
+  intl: ^0.20.3
   collection: ^1.19.0
 
 dev_dependencies:

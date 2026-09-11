@@ -71,6 +71,8 @@ class ExportService {
       }
     }
 
-    await Share.shareXFiles(files, subject: doc.title);
+    await SharePlus.instance.share(
+      ShareParams(files: files, subject: doc.title),
+    );
   }
 }

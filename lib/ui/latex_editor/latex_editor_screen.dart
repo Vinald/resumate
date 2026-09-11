@@ -51,7 +51,9 @@ class _LatexEditorScreenState extends State<LatexEditorScreen> {
     if (_doc.type.isLetter && sigPath != null && File(sigPath).existsSync()) {
       files.add(XFile(sigPath, name: 'signature.png'));
     }
-    await Share.shareXFiles(files, subject: '${_doc.title}.tex');
+    await SharePlus.instance.share(
+      ShareParams(files: files, subject: '${_doc.title}.tex'),
+    );
   }
 
   void _showTokens() {

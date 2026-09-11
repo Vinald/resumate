@@ -27,7 +27,7 @@ class _PdfCombinerScreenState extends State<PdfCombinerScreen> {
   String? _resultPath;
 
   Future<void> _pick() async {
-    final result = await FilePicker.platform.pickFiles(
+    final result = await FilePicker.pickFiles(
       allowMultiple: true,
       type: FileType.custom,
       allowedExtensions: ['pdf'],
@@ -69,8 +69,12 @@ class _PdfCombinerScreenState extends State<PdfCombinerScreen> {
               tooltip: 'Share result',
               icon: const Icon(Icons.ios_share),
               onPressed:
-                  () => Share.shareXFiles([XFile(_resultPath!)],
-                      subject: 'Combined PDF'),
+                  () => SharePlus.instance.share(
+                    ShareParams(
+                      files: [XFile(_resultPath!)],
+                      subject: 'Combined PDF',
+                    ),
+                  ),
             ),
         ],
       ),
