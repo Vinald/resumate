@@ -1,10 +1,10 @@
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:resume_generator/data/document_repository.dart';
-import 'package:resume_generator/data/seed_data.dart';
-import 'package:resume_generator/models/document.dart';
-import 'package:resume_generator/models/resume.dart';
+import 'package:resumate/data/document_repository.dart';
+import 'package:resumate/data/seed_data.dart';
+import 'package:resumate/models/document.dart';
+import 'package:resumate/models/resume.dart';
 
 void main() {
   late Directory tempDir;

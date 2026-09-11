@@ -1,8 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:resume_generator/data/seed_data.dart';
-import 'package:resume_generator/models/app_settings.dart';
-import 'package:resume_generator/models/document.dart';
-import 'package:resume_generator/render/document_pdf.dart';
+import 'package:resumate/data/seed_data.dart';
+import 'package:resumate/models/app_settings.dart';
+import 'package:resumate/models/document.dart';
+import 'package:resumate/render/document_pdf.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();

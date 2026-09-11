@@ -9,7 +9,7 @@ class ResumeGeneratorApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final seed = const Color(0xFF0000FF);
     return MaterialApp(
-      title: 'Resume Generator',
+      title: 'Resumate',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: seed),

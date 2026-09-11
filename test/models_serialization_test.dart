@@ -1,10 +1,10 @@
 import 'dart:convert';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:resume_generator/models/app_settings.dart';
-import 'package:resume_generator/models/document.dart';
-import 'package:resume_generator/models/letter.dart';
-import 'package:resume_generator/models/resume.dart';
+import 'package:resumate/models/app_settings.dart';
+import 'package:resumate/models/document.dart';
+import 'package:resumate/models/letter.dart';
+import 'package:resumate/models/resume.dart';
 
 void main() {
   test('ResumeData survives a JSON round-trip', () {
